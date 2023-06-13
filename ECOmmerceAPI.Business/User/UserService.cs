@@ -48,7 +48,7 @@ namespace ECommerceAPI.Business
 
         public ApiResponse Update(int Id, UserRequest request)
         {
-            var exist = unitOfWork.Repository<User>().GetById(Id);
+            var exist = unitOfWork.Repository<User>().GetByIdAsNoTracking(Id);
             if (exist is null)
             {
                 return new ApiResponse("User not found.");
@@ -58,7 +58,7 @@ namespace ECommerceAPI.Business
             {
                 return new ApiResponse("User cannot be updated.");
             }
-
+            //unitOfWork.Dispose();
             return base.Update(Id, request);
         }
 
@@ -73,5 +73,6 @@ namespace ECommerceAPI.Business
 
             }
         }
+
     }
 }

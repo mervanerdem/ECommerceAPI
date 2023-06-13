@@ -12,17 +12,21 @@ namespace ECommerceAPI.Data
     {
         private readonly EFContext dbContext;
         private bool disposed;
+        public IGenericRepository<User> UserRepository { get; private set; }
         public UnitOfWork(EFContext dbContext)
         {
             this.dbContext = dbContext;
-
+            UserRepository = new GenericRepository<User>(dbContext);
             //CategoryRepository = new GenericRepository<Category>(dbContext);
             //DapperAccountRepository = new DapperAccountRepository(dapperDbContext);
             //DapperTransactionRepository = new DapperTransactionRepository(dapperDbContext);
         }
+
+
         public void Complete()
         {
             dbContext.SaveChanges();
+            
         }
 
         public void CompleteWithTransaction()

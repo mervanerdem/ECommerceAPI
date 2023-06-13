@@ -11,7 +11,7 @@ namespace ECommerceAPI.Data.Repository
     public interface IGenericRepository<Entity> where Entity : BaseModel
     {
         Entity GetById(int id);
-        Task<Entity> GetByIdAsNoTracking(int id);
+        Entity GetByIdAsNoTracking(int id);
         Entity GetByIdWithInclude(int id, params string[] includes);
         void Insert(Entity entity);
         void Update(Entity entity);

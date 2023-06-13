@@ -112,6 +112,8 @@ namespace ECommerceAPI.Business
 
                 entity.Id = Id;
                 entity.UpdatedAt = DateTime.UtcNow;
+                entity.CreatedBy = exist.CreatedBy;
+                entity.UpdatedBy = exist.UpdatedBy;
 
                 unitOfWork.Repository<TEntity>().Update(entity);
                 unitOfWork.Complete();

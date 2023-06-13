@@ -74,9 +74,9 @@ namespace ECommerceAPI.Data.Repository
             return dbContext.Set<Entity>().Find(id);
         }
 
-        public async Task<Entity> GetByIdAsNoTracking(int id)
+        public Entity GetByIdAsNoTracking(int id)
         {
-            return await dbContext.Set<Entity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            return  dbContext.Set<Entity>().AsNoTracking().FirstOrDefault(x => x.Id == id);
         }
 
         public Entity GetByIdWithInclude(int id, params string[] includes)

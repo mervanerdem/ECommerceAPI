@@ -12,7 +12,8 @@ public static class DbContextExtension
         {
             var dbConfig = Configuration.GetConnectionString("MsSqlConnection");
             services.AddDbContext<EFContext>(opts =>
-            opts.UseSqlServer(dbConfig, b => b.MigrationsAssembly("ECommerceAPI.Service")));
+            opts.UseSqlServer(dbConfig, b => b.MigrationsAssembly("ECommerceAPI.Service"))
+                 .EnableSensitiveDataLogging());
         }
 
 
