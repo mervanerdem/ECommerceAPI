@@ -4,7 +4,6 @@ using ECommerceAPI.Data;
 using ECommerceAPI.Data.Domain;
 using ECommerceAPI.Schema.DataSets.Product;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks.Dataflow;
 
 namespace ECommerceAPI.Business.Services
 {
@@ -109,7 +108,7 @@ namespace ECommerceAPI.Business.Services
         }
         public ApiResponse<List<ProductResponse>> GetAllProduct(bool isActive)
         {
-            var products = unitOfWork.Repository<Product>().Where(p => p.IsActive.Equals(isActive)).Include(p => p.Categories).ThenInclude(p => p.Category).IgnoreAutoIncludes().ToList();
+            var products = unitOfWork.Repository<Product>().Where(p => p.IsActive.Equals(isActive))/*.Include(p => p.Categories).ThenInclude(p => p.Category).IgnoreAutoIncludes()*/.ToList();
 
             var productsResponse = mapper.Map<List<ProductResponse>>(products);
 
@@ -118,14 +117,14 @@ namespace ECommerceAPI.Business.Services
 
         public override ApiResponse<List<ProductResponse>> GetAll()
         {
-            var products = unitOfWork.Repository<Product>().GetAll().Include(p => p.Categories).ThenInclude(p => p.Category).ToList();
+            var products = unitOfWork.Repository<Product>().GetAll()/*.Include(p => p.Categories).ThenInclude(p => p.Category)*/.ToList();
             var productsResponse = mapper.Map<List<ProductResponse>>(products);
             return new ApiResponse<List<ProductResponse>>(productsResponse);
         }
 
         public override ApiResponse<ProductResponse> GetById(int id)
         {
-            var product = unitOfWork.Repository<Product>().Where(p => p.Id.Equals(id))?.Include(p => p.Categories).ThenInclude(p => p.Category)?.FirstOrDefault();
+            var product = unitOfWork.Repository<Product>().Where(p => p.Id.Equals(id))/*?.Include(p => p.Categories).ThenInclude(p => p.Category)*/.FirstOrDefault();
             if (product is null)
             {
                 return new ApiResponse<ProductResponse>("Not Found");

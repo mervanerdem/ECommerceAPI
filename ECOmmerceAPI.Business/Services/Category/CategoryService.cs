@@ -22,8 +22,8 @@ namespace ECommerceAPI.Business.Services
         {
             var categories = unitOfWork.Repository<Category>()
                     .GetAsQueryable()
-                    .Include(x => x.Products) 
-                    .ThenInclude(pc => pc.Product) 
+                    /*.Include(x => x.Products) 
+                    .ThenInclude(pc => pc.Product) */
                     .ToList();
             var categoryResponses = mapper.Map<List<CategoryResponse>>(categories);
             return new ApiResponse<List<CategoryResponse>>(categoryResponses);
@@ -33,8 +33,8 @@ namespace ECommerceAPI.Business.Services
         {
             var category = unitOfWork.Repository<Category>()
                     .Where(x => x.Id.Equals(id))
-                    .Include(x => x.Products)
-                    .ThenInclude(pc => pc.Product)
+                    /*.Include(x => x.Products)
+                    .ThenInclude(pc => pc.Product)*/
                     .FirstOrDefault();
             if (category is null)
             {
