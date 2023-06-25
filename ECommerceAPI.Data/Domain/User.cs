@@ -13,33 +13,52 @@ namespace ECommerceAPI.Data
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Role { get; set; }
-        public DateTime LastActivity { get; set; }
-        public int PasswordRetryCount { get; set; }
         public int Status { get; set; }
+        public decimal DigitalWallet { get; set; }
     }
 
     public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.Property(x => x.Id).IsRequired(true).UseIdentityColumn();
-            builder.Property(x => x.CreatedAt).IsRequired(false);
-            builder.Property(x => x.CreatedBy).IsRequired(false).HasMaxLength(30);
-            builder.Property(x => x.UpdatedAt).IsRequired(false);
-            builder.Property(x => x.UpdatedBy).IsRequired(false).HasMaxLength(30);
+            builder.Property(p => p.Id).IsRequired(true).UseIdentityColumn();
+            builder.Property(p => p.CreatedAt).IsRequired(false);
+            builder.Property(p => p.CreatedBy).IsRequired(false).HasMaxLength(30);
+            builder.Property(p => p.UpdatedAt).IsRequired(false);
+            builder.Property(p => p.UpdatedBy).IsRequired(false).HasMaxLength(30);
 
-            builder.Property(x => x.UserName).IsRequired(true).HasMaxLength(30);
-            builder.Property(x => x.Email).IsRequired(true).HasMaxLength(30);
-            builder.Property(x => x.Password).IsRequired(true).HasMaxLength(100);
-            builder.Property(x => x.FirstName).IsRequired(true).HasMaxLength(30);
-            builder.Property(x => x.LastName).IsRequired(true).HasMaxLength(30);
-            builder.Property(x => x.Role).IsRequired(true).HasMaxLength(10);
-
-            builder.Property(x => x.LastActivity).IsRequired(true);
-            builder.Property(x => x.PasswordRetryCount).IsRequired(true);
+            builder.Property(p => p.UserName).IsRequired(true).HasMaxLength(30);
+            builder.Property(p => p.Email).IsRequired(true).HasMaxLength(30);
+            builder.Property(p => p.Password).IsRequired(true).HasMaxLength(100);
+            builder.Property(p => p.FirstName).IsRequired(true).HasMaxLength(30);
+            builder.Property(p => p.LastName).IsRequired(true).HasMaxLength(30);
+            builder.Property(p => p.Role).IsRequired(true).HasMaxLength(10).HasDefaultValue("Customer");
+            builder.Property(p => p.DigitalWallet).HasDefaultValue(0);
             builder.Property(x => x.Status).IsRequired(true);
 
             builder.HasIndex(x => x.UserName).IsUnique(true);
+
+            Seed(builder);
+        }
+
+        //Default veritabanı oluştururken yapılacak işlem
+        private void Seed(EntityTypeBuilder<User> builder)
+        {
+            var existingUser = builder.HasData(new User
+            {
+                Id = 1,
+                UserName = "Admin",
+                FirstName = "Admin",
+                LastName = "Admin",
+                Email = "admin@dartvader.com",
+                Password = "5f4dcc3b5aa765d61d8327deb882cf99", // password
+                Role = "Admin",
+                Status = 1,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                CreatedBy = "Migrations",
+                UpdatedBy = "Migrations"
+            });
         }
     }
 }

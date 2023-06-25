@@ -1,4 +1,5 @@
-﻿using ECommerceAPI.Data.Repository;
+﻿using ECommerceAPI.Business.Services.Admin;
+using ECommerceAPI.Data.Repository;
 
 namespace ECommerceAPI.Service.RestExtension
 {
@@ -6,9 +7,9 @@ namespace ECommerceAPI.Service.RestExtension
     {
         public static void AddRepositoryExtension(this IServiceCollection services)
         {
-            //services.AddScoped<ICategoryRepository, CategoryRepository>();
-            //services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAdminService, AdminService>();
+
         }
     }
 }

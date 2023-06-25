@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using ECommerceAPI.Base;
+using ECommerceAPI.Base.Helper;
 using ECommerceAPI.Data;
-using ECommerceAPI.Schema;
+using ECommerceAPI.Schema.DataSets.Admin;
+using ECommerceAPI.Schema.DataSets.User;
+using ECommerceAPI.Schema.FluentValidation;
 
-namespace ECommerceAPI.Business
+namespace ECommerceAPI.Business.Users
 {
     public class UserService : BaseService<User, UserRequest, UserResponse>, IUserService
     {
@@ -16,14 +19,29 @@ namespace ECommerceAPI.Business
             this.mapper = mapper;
         }
 
-        public  ApiResponse Insert(UserRequest request)
+        public ApiResponse<List<AdminResponse>> GetAllUser()
         {
+            var users = unitOfWork.Repository<User>().GetAll().ToList();
+            var userResponse = mapper.Map<List<AdminResponse>>(users);
+            return new ApiResponse<List<AdminResponse>>(userResponse);
+        }
+
+        public ApiResponse Insert(UserRequest request)
+        {
+            var validator = new UserValidator();
+            var validationResult = validator.Validate(request);
+
+            if (!validationResult.IsValid)
+            {
+                string errorMessage = string.Join(Environment.NewLine, validationResult.Errors.Select(error => error.ErrorMessage));
+                return new ApiResponse(errorMessage);
+            }
             var exist = unitOfWork.Repository<User>().
-                Where(x => x.UserName.Equals(request.UserName)).ToList();
+            Where(x => x.Email.Equals(request.Email) || x.UserName.Equals(request.UserName)).ToList();
 
             if (exist.Any())
             {
-                return new ApiResponse("Username already in use.");
+                return new ApiResponse("Email or Username already in use.");
             }
 
             try
@@ -32,8 +50,6 @@ namespace ECommerceAPI.Business
                 var entity = mapper.Map<UserRequest, User>(request);
                 entity.CreatedAt = DateTime.UtcNow;
                 entity.Status = 1;
-                entity.PasswordRetryCount = 0;
-                entity.LastActivity = DateTime.UtcNow;
                 entity.UpdatedBy = "Admin";
 
                 unitOfWork.Repository<User>().Insert(entity);
@@ -46,7 +62,7 @@ namespace ECommerceAPI.Business
             }
         }
 
-        public ApiResponse Update(int Id, UserRequest request)
+        public ApiResponse UpdateUser(int Id, UserRequest request)
         {
             var exist = unitOfWork.Repository<User>().GetByIdAsNoTracking(Id);
             if (exist is null)
@@ -54,12 +70,42 @@ namespace ECommerceAPI.Business
                 return new ApiResponse("User not found.");
             }
 
-            if (exist.Status == 3 || exist.PasswordRetryCount > 3)
-            {
-                return new ApiResponse("User cannot be updated.");
-            }
             //unitOfWork.Dispose();
-            return base.Update(Id, request);
+            return Update(Id, request);
+        }
+
+        public ApiResponse UpdateUserByAdmin(int Id, AdminRequest request)
+        {
+            var user = unitOfWork.Repository<User>().Where(x => x.Id.Equals(Id)).FirstOrDefault();
+            if (user == null)
+            {
+                return new ApiResponse("Record Not Found.");
+            }
+            var existingUser = unitOfWork.Repository<User>().GetById(Id);
+            // Role alanını korumak için geçici bir değişken tanımla
+            var tempRole = existingUser.Role;
+            request.Password = JwtHelper.CreateMD5(request.Password);
+            // request nesnesini existingUser nesnesine eşle
+            mapper.Map(request, existingUser);
+            // Role alanını geçici değişkenle güncelle
+            existingUser.Role = tempRole;
+            existingUser.Id = Id;
+            existingUser.UpdatedAt = DateTime.UtcNow;
+
+            unitOfWork.Repository<User>().Update(existingUser);
+
+            if (unitOfWork.Complete() > 0)
+            {
+                return new ApiResponse();
+            }
+            return new ApiResponse("Internal Server Error");
+        }
+
+        public ApiResponse<UserResponse> UserBalance(int userId)
+        {
+            var user = unitOfWork.Repository<User>().GetById(userId);
+            var userResponse = mapper.Map<UserResponse>(user);
+            return new ApiResponse<UserResponse>(userResponse);
         }
 
         private string CreateMD5(string input)

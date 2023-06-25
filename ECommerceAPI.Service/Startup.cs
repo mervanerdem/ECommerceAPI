@@ -2,9 +2,6 @@
 using ECommerceAPI.Base;
 using ECommerceAPI.Data;
 using ECommerceAPI.Service.RestExtension;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Serilog;
 
 namespace ECommerceAPI.Service
 {
@@ -26,24 +23,13 @@ namespace ECommerceAPI.Service
             JwtConfig = Configuration.GetSection("JwtConfig").Get<JwtConfig>();
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
 
-            //services.AddControllersWithViews(options =>
-            //options.CacheProfiles.Add(ResponseCasheType.Minute45, new CacheProfile
-            //{
-            //    Duration = 45 * 60,
-            //    NoStore = false,
-            //    Location = ResponseCacheLocation.Any
-            //}));
-            services.AddResponseCompression();
-            services.AddMemoryCache();
-            //services.AddRedisExtension(Configuration);
             services.AddCustomSwaggerExtension();
             services.AddDbContextExtension(Configuration);
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddMapperExtension();
             services.AddRepositoryExtension();
             services.AddServiceExtension();
-            //services.AddJwtExtension();
-            //services.AddHangfireExtension(Configuration);
+            services.AddJwtExtension();
         }
 
 
@@ -55,18 +41,26 @@ namespace ECommerceAPI.Service
 
             }
 
+            //Migrations dediğin otomatik olur
+
+            IServiceScopeFactory serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            using IServiceScope serviceScope = serviceScopeFactory.CreateScope();
+            EFContext dbContext = serviceScope.ServiceProvider.GetService<EFContext>();
+            dbContext.Database.EnsureCreated();
+
+
+            //Swagger config
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.DefaultModelsExpandDepth(-1);
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "DartVader Company");
-                c.DocumentTitle = "DartVader Company";
+                c.DocumentTitle = "DartVader Company"; //Kimse starwars sevgimizi sorgulamasın :D
             });
 
             //DI
             //app.AddExceptionHandler();
             //app.AddDIExtension();
-            //app.UseHangfireDashboard();
 
             //app.UseMiddleware<HeartBeatMiddleware>();
             //app.UseMiddleware<ErrorHandlerMiddleware>();

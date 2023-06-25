@@ -1,6 +1,6 @@
 ﻿using ECommerceAPI.Base;
 
-namespace ECommerceAPI.Schema
+namespace ECommerceAPI.Schema.DataSets.User
 {
     public class UserRequest : BaseRequest
     {
@@ -9,6 +9,5 @@ namespace ECommerceAPI.Schema
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Role { get; set; }
     }
 }

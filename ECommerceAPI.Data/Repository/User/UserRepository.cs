@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-
-namespace ECommerceAPI.Data.Repository
+﻿namespace ECommerceAPI.Data.Repository
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {

@@ -1,4 +1,6 @@
-﻿using ECommerceAPI.Business;
+﻿using ECommerceAPI.Business.Services.Admin;
+using ECommerceAPI.Business.Services.Token;
+using ECommerceAPI.Business.Users;
 
 namespace ECommerceAPI.Service.RestExtension
 {
@@ -6,21 +8,9 @@ namespace ECommerceAPI.Service.RestExtension
     {
         public static void AddServiceExtension(this IServiceCollection services)
         {
-            //services.AddScoped<IUserLogService, UserLogService>();
-            //services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserService, UserService>();
-            //services.AddScoped<ICustomerService, CustomerService>();
-            //services.AddScoped<IAccountService, AccountService>();
-            //services.AddScoped<ITransactionService, TransactionService>();
-            //services.AddScoped<ICurrencyService, CurrencyService>();
-            //services.AddSingleton<IRedisService, RedisService>();
-
-            //services.AddScoped<ITransactionReportService, TransactionReportService>();
-            //services.AddScoped<IDapperAccountService, DapperAccountService>();
-
-            //services.AddScoped<ScopedService>();
-            //services.AddTransient<TransientService>();
-            //services.AddSingleton<SingletonService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAdminService, AdminService>();
         }
     }
 }

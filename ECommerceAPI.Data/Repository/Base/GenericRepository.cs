@@ -1,7 +1,6 @@
 ﻿using ECommerceAPI.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 
 namespace ECommerceAPI.Data.Repository
 {
@@ -9,10 +8,12 @@ namespace ECommerceAPI.Data.Repository
     {
         protected readonly EFContext dbContext;
         private bool disposed;
+        private readonly DbSet<Entity> DbSet;
 
         public GenericRepository(EFContext dbContext)
         {
             this.dbContext = dbContext;
+            DbSet = dbContext.Set<Entity>();
         }
 
         public void Delete(Entity entity)
@@ -76,7 +77,7 @@ namespace ECommerceAPI.Data.Repository
 
         public Entity GetByIdAsNoTracking(int id)
         {
-            return  dbContext.Set<Entity>().AsNoTracking().FirstOrDefault(x => x.Id == id);
+            return dbContext.Set<Entity>().AsNoTracking().FirstOrDefault(x => x.Id == id);
         }
 
         public Entity GetByIdWithInclude(int id, params string[] includes)
@@ -96,8 +97,8 @@ namespace ECommerceAPI.Data.Repository
 
         public void Update(Entity entity)
         {
-             dbContext.Set<Entity>().Update(entity);
-            
+            dbContext.Set<Entity>().Update(entity);
+
         }
 
         public IEnumerable<Entity> Where(Expression<Func<Entity, bool>> expression)
@@ -134,6 +135,11 @@ namespace ECommerceAPI.Data.Repository
         public void Dispose()
         {
             Clean(true);
+        }
+
+        public void Add(Entity entity)
+        {
+            DbSet.Add(entity);
         }
     }
 }

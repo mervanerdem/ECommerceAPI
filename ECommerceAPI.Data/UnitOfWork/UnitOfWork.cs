@@ -1,14 +1,12 @@
 ﻿using ECommerceAPI.Base;
 using ECommerceAPI.Data.Repository;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Transactions;
 
 namespace ECommerceAPI.Data
 {
-    public class UnitOfWork :IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly EFContext dbContext;
         private bool disposed;
@@ -23,10 +21,22 @@ namespace ECommerceAPI.Data
         }
 
 
-        public void Complete()
+        public int Complete()
         {
-            dbContext.SaveChanges();
-            
+            try
+            {
+                using (TransactionScope transaction = new TransactionScope())
+                {
+                    var result = dbContext.SaveChanges();
+                    transaction.Complete();
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Database işleminde bir hata oluştu.");
+            }
+
         }
 
         public void CompleteWithTransaction()

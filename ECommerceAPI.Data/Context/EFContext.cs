@@ -22,16 +22,6 @@ namespace ECommerceAPI.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());
-            //modelBuilder.ApplyConfiguration(new CategoryConfiguration());
-            //modelBuilder.ApplyConfiguration(new ProductConfiguration());
-            //modelBuilder.ApplyConfiguration(new UserLogConfiguration());
-            //modelBuilder.ApplyConfiguration(new CustomerConfiguration());
-            //modelBuilder.ApplyConfiguration(new AccountConfiguration());
-            //modelBuilder.ApplyConfiguration(new TransactionConfiguration());
-            //modelBuilder.ApplyConfiguration(new TransactionViewConfiguration());
-            //modelBuilder.ApplyConfiguration(new CurrencyConfiguration());
-
-            //modelBuilder.Entity<TransactionView>().Metadata.SetIsTableExcludedFromMigrations(true);
 
             base.OnModelCreating(modelBuilder);
         }

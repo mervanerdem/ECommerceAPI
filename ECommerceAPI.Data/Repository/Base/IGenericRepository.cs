@@ -1,10 +1,7 @@
 ﻿using ECommerceAPI.Base;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerceAPI.Data.Repository
 {
@@ -25,6 +22,7 @@ namespace ECommerceAPI.Data.Repository
         IEnumerable<Entity> WhereAsNoTracking(Expression<Func<Entity, bool>> expression);
         IEnumerable<Entity> WhereWithInclude(Expression<Func<Entity, bool>> expression, params string[] includes);
 
+        void Add(Entity entity);
         void Complete();
         void CompleteWithTransaction();
     }

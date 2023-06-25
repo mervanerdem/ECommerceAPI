@@ -10,12 +10,12 @@ namespace ECommerceAPI.Service.RestExtension
         {
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sim Api Management", Version = "v1.0" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dart Vader Clone Company", Version = "v1.0" });
 
 
                 var securityScheme = new OpenApiSecurityScheme
                 {
-                    Name = "Sim Management for IT Company",
+                    Name = "Dart Vader Clone Company",
                     Description = "Enter JWT Bearer token **_only_**",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http,

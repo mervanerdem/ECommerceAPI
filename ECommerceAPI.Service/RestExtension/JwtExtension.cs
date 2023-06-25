@@ -26,7 +26,7 @@ namespace ECommerceAPI.Service.RestExtension
                     ValidAudience = Startup.JwtConfig.Audience,
                     ValidateAudience = false,
                     ValidateLifetime = true,
-                    ClockSkew = TimeSpan.FromMinutes(2)
+                    ClockSkew = TimeSpan.FromMinutes(10) // 10 dk boyunca login durur
                 };
             });
         }

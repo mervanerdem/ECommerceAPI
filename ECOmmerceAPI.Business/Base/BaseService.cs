@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
-using Azure;
 using ECommerceAPI.Base;
+using ECommerceAPI.Base.Helper;
 using ECommerceAPI.Data;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerceAPI.Business
 {
@@ -78,7 +75,7 @@ namespace ECommerceAPI.Business
             }
         }
 
-        public ApiResponse Insert(TRequest request)
+        public virtual ApiResponse Insert(TRequest request)
         {
             try
             {
@@ -101,29 +98,35 @@ namespace ECommerceAPI.Business
         {
             try
             {
-                var entity = mapper.Map<TRequest, TEntity>(request);
+                var entity = mapper.Map<TRequest, User>(request);
 
-                var exist = unitOfWork.Repository<TEntity>().GetByIdAsNoTracking(Id);
+                var exist = unitOfWork.Repository<User>().GetByIdAsNoTracking(Id);
                 if (exist is null)
                 {
-                   //Log.Warning("Record not found for Id " + Id);
                     return new ApiResponse("Record not found");
                 }
 
                 entity.Id = Id;
                 entity.UpdatedAt = DateTime.UtcNow;
+                entity.Role = exist.Role;
                 entity.CreatedBy = exist.CreatedBy;
-                entity.UpdatedBy = exist.UpdatedBy;
+                entity.CreatedAt = exist.CreatedAt;
+                entity.UpdatedBy = exist.UserName;
+                entity.Password = JwtHelper.CreateMD5(entity.Password);
 
-                unitOfWork.Repository<TEntity>().Update(entity);
-                unitOfWork.Complete();
-                return new ApiResponse();
+                unitOfWork.Repository<User>().Update(entity);
+                if (unitOfWork.Complete() > 0)
+                {
+                    return new ApiResponse();
+                }
+                return new ApiResponse("Internal Server Error");
             }
             catch (Exception ex)
             {
-               // Log.Error(ex, "Update Exception");
                 return new ApiResponse(ex.Message);
             }
         }
+
+
     }
 }
