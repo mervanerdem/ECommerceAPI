@@ -27,7 +27,7 @@ namespace ECommerceAPI.Service
             services.AddDbContextExtension(Configuration);
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddMapperExtension();
-            services.AddRepositoryExtension();
+            //services.AddRepositoryExtension();
             services.AddServiceExtension();
             services.AddJwtExtension();
         }

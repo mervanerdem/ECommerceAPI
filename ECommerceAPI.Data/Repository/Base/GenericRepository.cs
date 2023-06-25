@@ -48,21 +48,14 @@ namespace ECommerceAPI.Data.Repository
             }
         }
 
-        public List<Entity> GetAll()
+        public IQueryable<Entity> GetAll()
         {
-            return dbContext.Set<Entity>().ToList();
+            return dbContext.Set<Entity>();
         }
 
         public List<Entity> GetAllAsNoTracking()
         {
             return dbContext.Set<Entity>().AsNoTracking().ToList();
-        }
-
-        public List<Entity> GetAllWithInclude(params string[] includes)
-        {
-            var query = dbContext.Set<Entity>().AsQueryable();
-            query = includes.Aggregate(query, (current, inc) => current.Include(inc));
-            return query.ToList();
         }
 
         public IQueryable<Entity> GetAsQueryable()
@@ -80,18 +73,8 @@ namespace ECommerceAPI.Data.Repository
             return dbContext.Set<Entity>().AsNoTracking().FirstOrDefault(x => x.Id == id);
         }
 
-        public Entity GetByIdWithInclude(int id, params string[] includes)
-        {
-            var query = dbContext.Set<Entity>().AsQueryable();
-            query = includes.Aggregate(query, (current, inc) => current.Include(inc));
-            return query.FirstOrDefault(x => x.Id == id);
-        }
-
         public void Insert(Entity entity)
         {
-            entity.CreatedAt = DateTime.UtcNow;
-            entity.CreatedBy = "Admin";
-
             dbContext.Set<Entity>().Add(entity);
         }
 
@@ -101,7 +84,7 @@ namespace ECommerceAPI.Data.Repository
 
         }
 
-        public IEnumerable<Entity> Where(Expression<Func<Entity, bool>> expression)
+        public IQueryable<Entity> Where(Expression<Func<Entity, bool>> expression)
         {
             return dbContext.Set<Entity>().Where(expression).AsQueryable();
         }
@@ -109,14 +92,6 @@ namespace ECommerceAPI.Data.Repository
         public IEnumerable<Entity> WhereAsNoTracking(Expression<Func<Entity, bool>> expression)
         {
             return dbContext.Set<Entity>().AsNoTracking().Where(expression).AsQueryable();
-        }
-
-        public IEnumerable<Entity> WhereWithInclude(Expression<Func<Entity, bool>> expression, params string[] includes)
-        {
-            var query = dbContext.Set<Entity>().AsQueryable();
-            query.Where(expression);
-            query = includes.Aggregate(query, (current, inc) => current.Include(inc));
-            return query.ToList();
         }
 
         private void Clean(bool disposing)

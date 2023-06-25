@@ -1,20 +1,18 @@
 ﻿using ECommerceAPI.Base;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerceAPI.Data.Domain
 {
-    public class Category :BaseModel
+    public class Category : BaseModel
     {
         public string Name { get; set; }
         public string URL { get; set; }
         public string Tags { get; set; }
         public virtual ICollection<ProductsCategories> Products { get; set; }
+        
     }
 
     public class CategoryConfiguration : IEntityTypeConfiguration<Category>

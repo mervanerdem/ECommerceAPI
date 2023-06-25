@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ECommerceAPI.Base
 {
@@ -6,7 +8,16 @@ namespace ECommerceAPI.Base
     {
         public override string ToString()
         {
-            return JsonSerializer.Serialize(this);
+            //var options = new JsonSerializerOptions
+            //{
+            //    ReferenceHandler = ReferenceHandler.Preserve,
+            //    WriteIndented = true
+            //};
+            //return JsonSerializer.Serialize(this, options);
+
+            return JsonConvert.SerializeObject(this, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+
+            //return JsonSerializer.Serialize(this);
         }
 
         public ApiResponse(string message = null)

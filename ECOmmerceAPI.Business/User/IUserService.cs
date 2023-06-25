@@ -10,5 +10,6 @@ namespace ECommerceAPI.Business.Users
         public ApiResponse<UserResponse> UserBalance(int userId);
         public ApiResponse UpdateUserByAdmin(int Id, AdminRequest request);
         public ApiResponse<List<AdminResponse>> GetAllUser();
+        public ApiResponse Update(int Id, UserRequest request);
     }
 }

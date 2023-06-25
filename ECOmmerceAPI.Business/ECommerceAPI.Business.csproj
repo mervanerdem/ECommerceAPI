@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ECommerceAPI.Data\ECommerceAPI.Data.csproj" />
     <ProjectReference Include="..\ECommerceAPI.Schema\ECommerceAPI.Schema.csproj" />
   </ItemGroup>
 

@@ -15,9 +15,12 @@ namespace ECommerceAPI.Data
         {
             this.dbContext = dbContext;
             UserRepository = new GenericRepository<User>(dbContext);
-            //CategoryRepository = new GenericRepository<Category>(dbContext);
-            //DapperAccountRepository = new DapperAccountRepository(dapperDbContext);
-            //DapperTransactionRepository = new DapperTransactionRepository(dapperDbContext);
+
+        }
+
+        public IGenericRepository<Entity> Repository<Entity>() where Entity : BaseModel
+        {
+            return new GenericRepository<Entity>(dbContext);
         }
 
 
@@ -75,9 +78,5 @@ namespace ECommerceAPI.Data
             GC.SuppressFinalize(this);
         }
 
-        public IGenericRepository<Entity> Repository<Entity>() where Entity : BaseModel
-        {
-            return new GenericRepository<Entity>(dbContext);
-        }
     }
 }

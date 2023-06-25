@@ -13,6 +13,8 @@ namespace ECommerceAPI.Data.Domain
         public int PointEarningPercentage { get; set; }
         public decimal MaxPointAmount { get; set; }
         public virtual ICollection<ProductsCategories> Categories { get; set; } = new List<ProductsCategories>();
+        public bool IsActive { get; set; }
+
     }
 
     public class ProductConfiguration : IEntityTypeConfiguration<Product>

@@ -62,6 +62,40 @@ namespace ECommerceAPI.Business.Users
             }
         }
 
+
+        public override ApiResponse Update(int Id, UserRequest request)
+        {
+            try
+            {
+                var entity = mapper.Map<UserRequest, User>(request);
+
+                var exist = unitOfWork.Repository<User>().GetByIdAsNoTracking(Id);
+                if (exist is null)
+                {
+                    return new ApiResponse("Record not found");
+                }
+
+                entity.Id = Id;
+                entity.UpdatedAt = DateTime.UtcNow;
+                entity.Role = exist.Role;
+                entity.CreatedBy = exist.CreatedBy;
+                entity.CreatedAt = exist.CreatedAt;
+                entity.UpdatedBy = exist.UserName;
+                entity.Password = JwtHelper.CreateMD5(entity.Password);
+
+                unitOfWork.Repository<User>().Update(entity);
+                if (unitOfWork.Complete() > 0)
+                {
+                    return new ApiResponse();
+                }
+                return new ApiResponse("Internal Server Error");
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse(ex.Message);
+            }
+        }
+
         public ApiResponse UpdateUser(int Id, UserRequest request)
         {
             var exist = unitOfWork.Repository<User>().GetByIdAsNoTracking(Id);

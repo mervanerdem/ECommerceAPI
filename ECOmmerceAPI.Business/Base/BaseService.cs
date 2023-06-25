@@ -17,7 +17,7 @@ namespace ECommerceAPI.Business
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
-        public ApiResponse Delete(int Id)
+        public virtual ApiResponse Delete(int Id)
         {
             try
             {
@@ -39,11 +39,11 @@ namespace ECommerceAPI.Business
             }
         }
 
-        public ApiResponse<List<TResponse>> GetAll()
+        public virtual ApiResponse<List<TResponse>> GetAll()
         {
             try
             {
-                var entityList = unitOfWork.Repository<TEntity>().GetAll();
+                var entityList = unitOfWork.Repository<TEntity>().GetAll().ToList();
                 var mapped = mapper.Map<List<TEntity>, List<TResponse>>(entityList);
                 return new ApiResponse<List<TResponse>>(mapped);
             }
@@ -54,7 +54,7 @@ namespace ECommerceAPI.Business
             }
         }
 
-        public ApiResponse<TResponse> GetById(int id)
+        public virtual ApiResponse<TResponse> GetById(int id)
         {
             try
             {
@@ -94,13 +94,13 @@ namespace ECommerceAPI.Business
             }
         }
 
-        public ApiResponse Update(int Id, TRequest request)
+        public virtual ApiResponse Update(int Id, TRequest request)
         {
             try
             {
-                var entity = mapper.Map<TRequest, User>(request);
+                var entity = mapper.Map<TRequest, TEntity>(request);
 
-                var exist = unitOfWork.Repository<User>().GetByIdAsNoTracking(Id);
+                var exist = unitOfWork.Repository<TEntity>().GetByIdAsNoTracking(Id);
                 if (exist is null)
                 {
                     return new ApiResponse("Record not found");
@@ -108,13 +108,10 @@ namespace ECommerceAPI.Business
 
                 entity.Id = Id;
                 entity.UpdatedAt = DateTime.UtcNow;
-                entity.Role = exist.Role;
                 entity.CreatedBy = exist.CreatedBy;
                 entity.CreatedAt = exist.CreatedAt;
-                entity.UpdatedBy = exist.UserName;
-                entity.Password = JwtHelper.CreateMD5(entity.Password);
 
-                unitOfWork.Repository<User>().Update(entity);
+                unitOfWork.Repository<TEntity>().Update(entity);
                 if (unitOfWork.Complete() > 0)
                 {
                     return new ApiResponse();
