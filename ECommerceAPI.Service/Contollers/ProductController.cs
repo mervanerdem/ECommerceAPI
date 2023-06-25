@@ -17,13 +17,6 @@ namespace ECommerceAPI.Service.Contollers
             this.productService = productService;
         }
 
-        //[HttpGet("GetAll")]
-        //public ApiResponse<List<ProductResponse>> GetAll()
-        //{
-        //    var response = productService.GetAll();
-        //    return response;
-        //}
-
         [HttpGet("GetAllProduct")]
         public ApiResponse<List<ProductResponse>> GetAllProduct(bool isActive)
         {

@@ -19,8 +19,6 @@ namespace ECommerceAPI.Service.Contollers
             this.orderService = orderService;
         }
 
-        // Sipariş Oluşturmak için kullanılır. Kullanıcının kim olduğu Jwt tokeni aracılığıyla alınır.
-
         [HttpPost]
         [UserRole]
         public ApiResponse AddOrder(OrderRequest orderRequest)
@@ -29,7 +27,6 @@ namespace ECommerceAPI.Service.Contollers
             var response = orderService.Add(orderRequest, userId);
             return response;
         }
-        // Kişinin kendisine ait siparişleri getirmesi sağlanır.
         [HttpGet("GetAllMyOrder")]
         [UserRole]
         public ApiResponse<List<OrderResponse>> GetAllMyOrder()

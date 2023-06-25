@@ -94,7 +94,7 @@ namespace ECommerceAPI.Business.Services
                 return new ApiResponse();
             }
         }
-        // Benzersiz Sipariş Numarası Üretir.
+
         private string GenerateUniqueOrderNumber()
         {
             while (true)
@@ -106,7 +106,7 @@ namespace ECommerceAPI.Business.Services
                 }
             }
         }
-        // Sipariş Detaylarını OrderDetail tablosuna ekler.
+
         private void OrderDetailAdd(IQueryable<Product> products, string orderNumber)
         {
             foreach (var item in products)
@@ -121,7 +121,6 @@ namespace ECommerceAPI.Business.Services
 
             }
         }
-        // Stok azaltır.
         private void StockReduction(IQueryable<Product> products)
         {
             foreach (var item in products)
@@ -130,7 +129,7 @@ namespace ECommerceAPI.Business.Services
                 unitOfWork.Repository<Product>().Update(item);
             }
         }
-        // Sipariş Oluşturur.
+
         private void OrderAdd(int userId, decimal sumPrice, decimal pointBalance, decimal couponAmount, string couponCode, string orderNumber)
         {
             unitOfWork.Repository<Order>().Add(new Order
@@ -143,7 +142,7 @@ namespace ECommerceAPI.Business.Services
                 CouponCode = couponCode
             });
         }
-        // Verilen kuponun geçerli olup olmadığını kontrol eder.
+
         private bool CouponControl(Coupon coupon)
         {
             if (coupon is null)
@@ -157,7 +156,7 @@ namespace ECommerceAPI.Business.Services
             return false;
 
         }
-        // Yeterli sayıda stok olup olmadığını kontrol eder.
+
         private bool StockControl(IQueryable<Product> products)
         {
             foreach (var item in products)
@@ -175,14 +174,13 @@ namespace ECommerceAPI.Business.Services
             user.DigitalWallet = pointSum;
             unitOfWork.Repository<User>().Update(user);
         }
-        // Ödeme entegrasyonu için metod.
+
         private bool Payment(decimal sumPrice)
         {
-            // Ödeme sistemi entegresi..
             return true;
 
         }
-        // Puan bakiyesinin hesaplama işlemi yapılır.
+
         private decimal PointCalculator(Product item, decimal userPointRatio, decimal price)
         {
             var newPrice = price - userPointRatio;
@@ -191,7 +189,6 @@ namespace ECommerceAPI.Business.Services
             return point;
         }
 
-        // Request header kısmında bulunan JWT keyindeki user bilgisine göre siparişleri getirir. Kullanıcının kendisine ait siparişleri çekmesini sağlar.
         public ApiResponse<List<OrderResponse>> GetAllMyOrder(int userId)
         {
             var orders = unitOfWork.Repository<Order>().Where(x => x.UserID.Equals(userId)).ToList();
